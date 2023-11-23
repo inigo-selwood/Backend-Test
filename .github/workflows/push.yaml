@@ -7,8 +7,32 @@ on:
 
 jobs:
 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+
+    - name: install python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+
+    - name: install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r deployment/requirements.txt
+        pip install pytest
+
+    - name: test
+      working-directory: services/nlp_api
+      run: |
+        python -m pytest test/
+
   deploy:
     runs-on: ubuntu-latest
+    needs: test
 
     steps:
     - name: checkout

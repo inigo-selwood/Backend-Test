@@ -25,7 +25,7 @@ class Model():
                             ])
         
         # Imagenet labels for tensor -> label
-        self.labels = json.load(open("imagenet_labels.json", 'r'))
+        self.labels = json.load(open("../resources/imagenet_labels.json", 'r'))
         
     def __call__(self, image, **kwargs):
         # Resize image using transform, move to device
