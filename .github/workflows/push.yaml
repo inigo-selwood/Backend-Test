@@ -4,6 +4,8 @@ on:
   push:
     branches:
     - main
+    paths:
+    - '**/*.py'
 
 jobs:
 
@@ -18,6 +20,7 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.10'
+        cache: 'pip'
 
     - name: install dependencies
       run: |
@@ -68,5 +71,5 @@ jobs:
         registry-login-server: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
         registry-username: ${{ secrets.AZURE_CLIENT_ID }}
         registry-password: ${{ secrets.AZURE_CLIENT_SECRET }}
-        name: backend_test
+        name: backend-test
         location: 'uk south'
