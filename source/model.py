@@ -1,4 +1,4 @@
-from typing import Any
+import os
 import json
 import torch
 import torchvision
@@ -28,8 +28,16 @@ class Model:
             ]
         )
 
+        # Get repo root
+        root = __file__
+        for _ in range(2):
+            root = os.path.dirname(root)
+        root = os.path.abspath(root)
+
+        labels_path = f'{root}/resources/imagenet_labels.json'
+
         # Imagenet labels for tensor -> label
-        self.labels = json.load(open("resources/imagenet_labels.json", "r"))
+        self.labels = json.load(open(labels_path, "r"))
 
     def __call__(self, image, **kwargs):
         # Resize image using transform, move to device
