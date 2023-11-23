@@ -1,0 +1,37 @@
+name: Push
+
+on: 
+  push:
+    branches:
+    - master
+
+jobs:
+
+  
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+
+    - name: azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: build and push
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.AZURE_CLIENT_ID }}
+        password: ${{ secrets.AZURE_CLIENT_SECRET }}
+    
+    - name: build
+      run: |
+        docker build \
+          -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/backend_test:${{ github.sha }} \
+          .
+        docker push \
+          ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/backend_test:${{ github.sha }}
