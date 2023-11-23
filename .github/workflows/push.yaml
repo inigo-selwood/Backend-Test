@@ -7,8 +7,6 @@ on:
 
 jobs:
 
-  
-
   deploy:
     runs-on: ubuntu-latest
 
@@ -32,6 +30,7 @@ jobs:
       run: |
         docker build \
           -t ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/backend_test:${{ github.sha }} \
+          -f deployment/Dockerfile \
           .
         docker push \
           ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/backend_test:${{ github.sha }}
