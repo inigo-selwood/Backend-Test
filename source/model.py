@@ -8,7 +8,8 @@ import torchvision.transforms as transforms
 MODEL_NAME = "mobilenet_v2"
 DEVICE_ID = "cpu"
 
-class Model():
+
+class Model:
     def __init__(self):
         # Get model from TorchVision, move to device, set eval
         self.model = getattr(torchvision.models, MODEL_NAME)(pretrained=True)
@@ -16,17 +17,20 @@ class Model():
         self.model.eval()
 
         # Create transform to handle image transformation
-        self.transform = transforms.Compose([
-                                transforms.Resize((224, 224)),
-                                transforms.Grayscale(num_output_channels=3),
-                                transforms.ToTensor(),
-                                transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-                            ])
-        
+        self.transform = transforms.Compose(
+            [
+                transforms.Resize((224, 224)),
+                transforms.Grayscale(num_output_channels=3),
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+                ),
+            ]
+        )
+
         # Imagenet labels for tensor -> label
-        self.labels = json.load(open("../resources/imagenet_labels.json", 'r'))
-        
+        self.labels = json.load(open("resources/imagenet_labels.json", "r"))
+
     def __call__(self, image, **kwargs):
         # Resize image using transform, move to device
         image = self.transform(image)
@@ -40,5 +44,3 @@ class Model():
         print(self.labels[preds.item()])
 
         return self.labels[preds.item()]
-
- 

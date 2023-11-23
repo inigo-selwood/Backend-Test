@@ -1,11 +1,14 @@
-from fastapi import FastAPI, UploadFile, File
 from io import BytesIO
+
+from fastapi import FastAPI, UploadFile, File
 from PIL import Image
-from model import Model  # Import your Model class from your code file
+
+from .model import Model
+
 
 app = FastAPI()
+model = Model()
 
-model = Model()  # Initialize your model
 
 @app.post("/infer")
 async def infer(image_file: UploadFile = File(...)):
@@ -18,8 +21,6 @@ async def infer(image_file: UploadFile = File(...)):
     return {"result": result}
 
 
-"Health check endpoint"
 @app.get("/health")
 async def health():
     return {"status": "ok"}
-

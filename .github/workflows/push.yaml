@@ -10,6 +10,28 @@ on:
 
 jobs:
 
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+
+    - name: install python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install flake8
+
+    - name: lint
+      run: |
+        python -m flake8 source/
+
   test:
     runs-on: ubuntu-latest
 
