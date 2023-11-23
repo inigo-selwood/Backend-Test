@@ -26,11 +26,11 @@ jobs:
         pip install pytest
 
     - name: test
-      working-directory: services/nlp_api
+      working-directory: source
       run: |
-        python -m pytest test/
+        python -m pytest ../test/
 
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
     needs: test
 
@@ -58,3 +58,15 @@ jobs:
           .
         docker push \
           ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/backend_test:${{ github.sha }}
+
+    - name: deploy
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+        dns-name-label: ${{ secrets.AZURE_RESOURCE_GROUP }}${{ github.run_number }}
+        image: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/backend_test:${{ github.sha }}
+        registry-login-server: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+        registry-username: ${{ secrets.AZURE_CLIENT_ID }}
+        registry-password: ${{ secrets.AZURE_CLIENT_SECRET }}
+        name: backend_test
+        location: 'uk south'
